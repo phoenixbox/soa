@@ -1,10 +1,15 @@
+ENV['SINATRA_ENV'] = 'test'
+
 require File.dirname(__FILE__) + '/../service'
-require 'spec'
-require 'spec/interop/test'
+require 'rspec'
 require 'rack/test'
 
-set :environment, :test
-Test::Unit::TestCase.send :include, Rack::Test::Methods
+# set :environment, :test
+#Test::Unit::TestCase.send :include, Rack::Test::Methods
+
+RSpec.configure do |conf|
+  conf.include Rack::Test::Methods
+end
 
 def app
   Sinatra::Application
@@ -48,7 +53,7 @@ describe "service" do
       attributes = JSON.parse(last_response.body)
       attributes["bio"].should == "rubyist"
     end
-    
+
     it "should return a 404 for a user that doesn't exist" do
       get '/api/v1/users/foo'
       last_response.status.should == 404
@@ -70,4 +75,63 @@ describe "service" do
       attributes["bio"].should == "southern belle"
     end
   end
+
+  describe 'PUT on /api/v1/users/:id' do
+    it "should be able to update a user" do
+      User.create(
+        :name => "shane",
+        :email => "shane@example.com",
+        :password => "shane",
+        :bio => "gschool student")
+      put '/api/v1/users/shane', {
+        :bio => "gschool graduate"}.to_json
+      last_response.should be_ok
+      get '/api/v1/users/bryan'
+      attributes = JSON.parse(last_response.body)
+      attributes["bio"].should == "gschool graduate"
+    end
+  end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

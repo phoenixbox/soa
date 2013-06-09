@@ -1,14 +1,33 @@
-require 'rubygems'
-require 'activerecord'
+require 'active_record'
 require 'sinatra'
-require 'models/user'
+require_relative 'models/user.rb'
+require 'logger'
 
-# load requirements and set up the environment
+# setting up a logger. levels -> DEBUG < INFO < WARN < ERROR < FATAL < UNKNOWN
+log = Logger.new(STDOUT)
+log.level = Logger::DEBUG 
+
+# setting up our environment
 env_index = ARGV.index("-e")
 env_arg = ARGV[env_index + 1] if env_index
 env = env_arg || ENV["SINATRA_ENV"] || "development"
+log.debug "env: #{env}"
+
+# connecting to the database
+use ActiveRecord::ConnectionAdapters::ConnectionManagement # close connection to the DDBB properly...https://github.com/puma/puma/issues/59
 databases = YAML.load_file("config/database.yml")
 ActiveRecord::Base.establish_connection(databases[env])
+log.debug "#{databases[env]['database']} database connection established..."
+
+# creating fixture data (only in test mode)
+if env == 'test'
+  User.destroy_all
+  User.create(
+   :name => "paul", 
+   :email => "paul@pauldix.net", 
+   :bio => "rubyist")
+  log.debug "fixture data created in test database..."
+end
 
 # HTTP entry points
 # get a user by name
@@ -22,12 +41,13 @@ get '/api/v1/users/:name' do
 end
 
 post '/api/v1/users' do
-  user = User.create(JSON.parse(request.body.read))
-  if user.valid?
-    user.to_json
-  else
-    error 400, user.errors.to_json
-  end
+  begin
+    user = User.create(JSON.parse(request.body.read))
+    if user.valid?
+      user.to_json
+    else
+      error 400, user.errors.to_json
+    end
   rescue => e
     error 400, e.message.to_json
   end
