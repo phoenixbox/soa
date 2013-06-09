@@ -54,6 +54,7 @@ post '/api/v1/users' do
   end
 end
 
+# update a user in the database
 put '/api/v1/users/:name' do
   user = User.find_by_name(params[:name])
   if user
@@ -66,6 +67,18 @@ put '/api/v1/users/:name' do
     rescue => e
       error 400, e.message.to_json
     end
+  else
+    error 404, {:error => "user not found"}.to_json
+  end
+end
+
+# delete a user in the database
+delete '/api/v1/users/:name' do
+  user = User.find_by_name(params[:name])
+  if user
+    user.destroy
+    # return the empty user in json
+    user.to_json
   else
     error 404, {:error => "user not found"}.to_json
   end
