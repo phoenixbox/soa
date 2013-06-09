@@ -23,7 +23,7 @@ describe "service" do
         :password => "strongpass",
         :bio => "rubyist")
     end
-    
+
     it "should return a user by name" do
       get '/api/v1/users/paul'
       last_response.should be_ok
@@ -48,10 +48,26 @@ describe "service" do
       attributes = JSON.parse(last_response.body)
       attributes["bio"].should == "rubyist"
     end
-
+    
     it "should return a 404 for a user that doesn't exist" do
       get '/api/v1/users/foo'
       last_response.status.should == 404
+    end
+  end
+
+  describe "POST on /api/v1/users" do
+    it "should create a user" do
+      post '/api/v1/users', {
+      :name => "trotter",
+      :email => "trotter@example.com",
+      :password => "trotter",
+      :bio => "southern belle"}.to_json
+      last_response.should be_ok
+      get '/api/v1/users/trotter'
+      attributes = JSON.parse(last_response.body)
+      attributes["name"].should == "trotter"
+      attributes["email"].should == "trotter@example.com"
+      attributes["bio"].should == "southern belle"
     end
   end
 end
