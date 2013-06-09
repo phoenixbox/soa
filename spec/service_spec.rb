@@ -76,6 +76,26 @@ describe "service" do
     end
   end
 
+  describe 'POST on /api/v1/users/:id/sessions' do
+    before(:all) do
+      User.create(:name=> "josh", :password => "cheese head")
+    end
+
+    it "should return the user object on valid credentials" do
+      post '/api/v1/users/josh/sessions', { 
+        :password => "cheese head" }.to_json
+      last_response.should be_ok
+      attributes = JSON.parse(last_response.body)
+      attribute["name"].should == "josh"
+    end
+
+    it "should fail on invalid credentials" do
+      post '/api/v1/users/josh/sessions', {
+        :password => "invalid"}.to_json
+        last_response.status.should == 400
+    end
+  end
+
   describe 'PUT on /api/v1/users/:id' do
     it "should be able to update a user" do
       User.create(
