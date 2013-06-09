@@ -7,6 +7,19 @@ require 'logger'
 log = Logger.new(STDOUT)
 log.level = Logger::DEBUG 
 
+# Provisioning for testing with fixture data for the client
+# When testing the client run the db migrations in the test env
+# Run the servide in a test env from the commmand line
+  # rake db:migrate RAILS_ENV=test
+  # ruby service.rb –p 3000 –e test
+if env == "test"
+  puts "starting in test mode"
+  User.destroy_all
+  User.create(:name => "shane", 
+              :email =>"shane@example.com",
+              :bio => "gschool graduate from Ireland")
+end
+
 # setting up our environment
 env_index = ARGV.index("-e")
 env_arg = ARGV[env_index + 1] if env_index
