@@ -9,7 +9,20 @@ describe "client" do
     user["email"].should == "shane@example.com"
     user["bio"].should == "gschool graduate from Ireland"
   end
+
   it "should return nil if the user is not found" do
     user = User.find_by_name("simon").should be_nil
+  end
+
+  it "should create a user" do
+    user = User.create({
+      :name => "anna",
+      :email => "anna@example.com",
+      :password => "anna"
+      })
+    # testing the return of a hash
+    user["name"].should == "anna"
+    user["email"].should == "anna@example.com"
+    User.find_by_name("anna").should == user
   end
 end
