@@ -91,6 +91,20 @@ describe "service" do
       attributes["bio"].should == "gschool graduate"
     end
   end
+
+  describe "DELETE on /api/v1/users/:id" do
+    it "should delete a user" do
+      User.create(
+        :name => "francis",
+        :email => "no spam",
+        :password => "whatever",
+        :bio => "williamsburg hipster")
+      delete '/api/v1/users/francis'
+      last_response.should be_ok
+      get '/api/v1/users/francis'
+      last_response.status.should == 404
+    end
+  end
 end
 
 
