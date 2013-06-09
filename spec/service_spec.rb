@@ -76,7 +76,7 @@ describe "service" do
     end
   end
 
-  describe 'POST on /api/v1/users/:id/sessions' do
+  describe 'POST on /api/v1/users/:name/sessions' do
     before(:all) do
       User.create(:name=> "josh", :password => "cheese head")
     end

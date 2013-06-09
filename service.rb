@@ -84,7 +84,7 @@ delete '/api/v1/users/:name' do
   end
 end
 
-put '/api/v1/users/:id/sessions' do
+put '/api/v1/users/:name/sessions' do
   begin
     # try to find the user by their name and password
     # retrieve the password from the response
