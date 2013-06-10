@@ -38,4 +38,13 @@ describe "client" do
     User.destroy("paul").should == true
     User.find_by_name("paul").should be_nil
   end
+
+  it "should log the user in" do
+    user = User.login("paul", "password")
+    user["name"].should == "paul"
+  end
+
+  it "should not log the user in" do
+    User.login("paul", "invalid").should be_nil
+  end
 end
