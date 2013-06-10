@@ -33,4 +33,9 @@ describe "client" do
     user["bio"].should = "moving to new york"
     User.find_by_name("shane").should == user
   end
+
+  it "should destroy the user" do
+    User.destroy("paul").should == true
+    User.find_by_name("paul").should be_nil
+  end
 end

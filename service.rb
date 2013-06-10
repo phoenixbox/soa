@@ -18,6 +18,7 @@ if env == "test"
   User.create(:name => "shane", 
               :email =>"shane@example.com",
               :bio => "gschool graduate from Ireland")
+  User.create(:name => "paul", :email => "paul@example.com")
 end
 
 # setting up our environment

@@ -28,7 +28,7 @@ class User
     end
   end
 
-  def self.update
+  def self.update(name, attributes)
     response = Typhoeus::Request.put(
       "#{base_uri)}ap1/v1/users/#{name}",
       :body => attributes.to_json)
@@ -37,5 +37,10 @@ class User
     else
       raise response.body
     end
+  end
+
+  def self.destroy(name)
+    # check that the repsonse code is 200
+    Typhoeus::Request.delete("#{base_uri}/api/v1/users/#{name}").code == 200
   end
 end
