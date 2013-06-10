@@ -97,7 +97,8 @@ delete '/api/v1/users/:name' do
   end
 end
 
-put '/api/v1/users/:name/sessions' do
+# verify the user with a post action
+post '/api/v1/users/:name/sessions' do
   begin
     # try to find the user by their name and password
     # retrieve the password from the response

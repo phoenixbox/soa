@@ -25,4 +25,12 @@ describe "client" do
     user["email"].should == "anna@example.com"
     User.find_by_name("anna").should == user
   end
+
+  it "should update the user" do
+    user = User.update("shane", {:bio => "moving to new york"})
+    user["name"].should == "shane"
+    user["email"].should == "shane@example.com"
+    user["bio"].should = "moving to new york"
+    User.find_by_name("shane").should == user
+  end
 end

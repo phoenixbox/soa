@@ -27,4 +27,15 @@ class User
       raise response.body
     end
   end
+
+  def self.update
+    response = Typhoeus::Request.put(
+      "#{base_uri)}ap1/v1/users/#{name}",
+      :body => attributes.to_json)
+    if response.code == 200
+      JSON.parse(response.body)
+    else
+      raise response.body
+    end
+  end
 end
